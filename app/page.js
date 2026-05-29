@@ -1,4 +1,26 @@
-export default function Home() {
+import { shopifyFetch } from "../lib/shopify";
+
+async function getProducts() {
+  const query = `
+    query {
+      products(first: 6) {
+        edges {
+          node {
+            id
+            title
+          }
+        }
+      }
+    }
+  `;
+
+  const res = await shopifyFetch(query);
+  return res.data?.products?.edges || [];
+}
+
+export default async function Home() {
+  const products = await getProducts();
+
   return (
     <main style={{
       fontFamily: "Arial",
@@ -14,17 +36,11 @@ export default function Home() {
         borderRadius: "20px",
         marginBottom: "30px"
       }}>
-        <h1 style={{
-          fontSize: "48px",
-          marginBottom: "20px"
-        }}>
+        <h1 style={{ fontSize: "48px", marginBottom: "20px" }}>
           Urbexo
         </h1>
 
-        <p style={{
-          fontSize: "20px",
-          color: "#555"
-        }}>
+        <p style={{ fontSize: "20px", color: "#555" }}>
           AI-powered Infrastructure for Local Commerce Ecosystems
         </p>
       </section>
@@ -44,33 +60,21 @@ export default function Home() {
           gap: "20px",
           marginTop: "20px"
         }}>
-          <div style={{
-            background: "#fafafa",
-            padding: "20px",
-            borderRadius: "12px"
-          }}>
+          <div style={{ background: "#fafafa", padding: "20px", borderRadius: "12px" }}>
             Mermaid Aquariums
           </div>
 
-          <div style={{
-            background: "#fafafa",
-            padding: "20px",
-            borderRadius: "12px"
-          }}>
+          <div style={{ background: "#fafafa", padding: "20px", borderRadius: "12px" }}>
             SP Center
           </div>
 
-          <div style={{
-            background: "#fafafa",
-            padding: "20px",
-            borderRadius: "12px"
-          }}>
+          <div style={{ background: "#fafafa", padding: "20px", borderRadius: "12px" }}>
             Local Marketplace
           </div>
         </div>
       </section>
 
-      {/* Featured Products */}
+      {/* Featured Products (NOW DYNAMIC) */}
       <section style={{
         background: "white",
         padding: "40px",
@@ -85,37 +89,18 @@ export default function Home() {
           gap: "20px",
           marginTop: "20px"
         }}>
-          <div style={{
-            background: "#fafafa",
-            padding: "20px",
-            borderRadius: "12px"
-          }}>
-            Aquarium Products
-          </div>
-
-          <div style={{
-            background: "#fafafa",
-            padding: "20px",
-            borderRadius: "12px"
-          }}>
-            Home Living
-          </div>
-
-          <div style={{
-            background: "#fafafa",
-            padding: "20px",
-            borderRadius: "12px"
-          }}>
-            Smart Electronics
-          </div>
-
-          <div style={{
-            background: "#fafafa",
-            padding: "20px",
-            borderRadius: "12px"
-          }}>
-            Outdoor Essentials
-          </div>
+          {products.map((p) => (
+            <div
+              key={p.node.id}
+              style={{
+                background: "#fafafa",
+                padding: "20px",
+                borderRadius: "12px"
+              }}
+            >
+              {p.node.title}
+            </div>
+          ))}
         </div>
       </section>
 
