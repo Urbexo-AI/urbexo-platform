@@ -2,17 +2,21 @@ import { shopifyFetch } from "../lib/shopify";
 
 async function getProducts() {
   const query = `
-    query {
-      products(first: 6) {
-        edges {
-          node {
-            id
-            title
+    const query = `
+  query {
+    products(first: 6) {
+      edges {
+        node {
+          id
+          title
+          featuredImage {
+            url
           }
         }
       }
     }
-  `;
+  }
+`;
 
   const res = await shopifyFetch(query);
   return res.data?.products?.edges || [];
@@ -98,7 +102,23 @@ export default async function Home() {
                 borderRadius: "12px"
               }}
             >
-              {p.node.title}
+             <div>
+  {p.node.featuredImage?.url && (
+    <img
+      src={p.node.featuredImage.url}
+      alt={p.node.title}
+      style={{
+        width: "100%",
+        height: "160px",
+        objectFit: "cover",
+        borderRadius: "8px",
+        marginBottom: "10px"
+      }}
+    />
+  )}
+
+  <div>{p.node.title}</div>
+</div>
             </div>
           ))}
         </div>
