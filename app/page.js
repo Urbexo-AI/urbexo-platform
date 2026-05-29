@@ -2,21 +2,20 @@ import { shopifyFetch } from "../lib/shopify";
 
 async function getProducts() {
   const query = `
-    const query = `
-  query {
-    products(first: 6) {
-      edges {
-        node {
-          id
-          title
-          featuredImage {
-            url
+    query {
+      products(first: 6) {
+        edges {
+          node {
+            id
+            title
+            featuredImage {
+              url
+            }
           }
         }
       }
     }
-  }
-`;
+  `;
 
   const res = await shopifyFetch(query);
   return res.data?.products?.edges || [];
