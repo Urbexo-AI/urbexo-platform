@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { shopifyFetch } from "../lib/shopify";
 
 async function getProducts() {
