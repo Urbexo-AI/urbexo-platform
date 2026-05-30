@@ -109,19 +109,19 @@ console.log("SHOPIFY PRODUCTS:", products);
               }}
             >
              <div>
-  {p.node.featuredImage?.url && (
-    <img
-      src={p.node.featuredImage.url}
-      alt={p.node.title}
-      style={{
-        width: "100%",
-        height: "160px",
-        objectFit: "cover",
-        borderRadius: "8px",
-        marginBottom: "10px"
-      }}
-    />
-  )}
+{p.node.images?.edges?.[0]?.node?.url && (
+  <img
+    src={p.node.images.edges[0].node.url}
+    alt={p.node.title}
+    style={{
+      width: "100%",
+      height: "160px",
+      objectFit: "cover",
+      borderRadius: "8px",
+      marginBottom: "10px"
+    }}
+  />
+)}
 
   <div>{p.node.title}</div>
 </div>
