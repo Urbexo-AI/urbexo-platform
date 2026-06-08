@@ -107,7 +107,10 @@ console.log("SHOPIFY PRODUCTS:", products);
           marginTop: "20px"
         }}>
           {products.map((p) => (
-  <div
+          <Link
+  href={`/product/${p.node.id.replace("gid://shopify/Product/", "")}`}
+>
+<div
     key={p.node.id}
     style={{
       background: "#fafafa",
@@ -158,3 +161,5 @@ console.log("SHOPIFY PRODUCTS:", products);
     </main>
   );
 }
+  </div>
+</Link>
