@@ -129,16 +129,6 @@ console.log("SHOPIFY PRODUCTS:", products);
     }}
   />
 )}
-    alt={p.node.title}
-    style={{
-      width: "100%",
-      height: "160px",
-      objectFit: "cover",
-      borderRadius: "8px",
-      marginBottom: "10px"
-    }}
-  />
-)}
 </div>
 
   <div>{p.node.title}</div>
