@@ -106,8 +106,7 @@ console.log("SHOPIFY PRODUCTS:", products);
           gap: "20px",
           marginTop: "20px"
         }}>
-          {products.map((p) => {
-            const imageUrl = p.node.images?.edges?.[0]?.node?.url;
+          {products.map((p) => (
             <div
               key={p.node.id}
               style={{
@@ -116,11 +115,11 @@ console.log("SHOPIFY PRODUCTS:", products);
                 borderRadius: "12px"
               }}
             >
-             <div>
-{imageUrl && (
+             {p.node.images?.edges?.[0]?.node?.url && (
   <img
-    src={imageUrl}
+    src={p.node.images.edges[0].node.url}
     alt={p.node.title}
+
     style={{
       width: "100%",
       height: "160px",
@@ -130,7 +129,6 @@ console.log("SHOPIFY PRODUCTS:", products);
     }}
   />
 )}
-</div>
 
   <div>{p.node.title}</div>
     <div
@@ -145,8 +143,7 @@ console.log("SHOPIFY PRODUCTS:", products);
   ).toFixed(2)}
 </div>
 </div>
-            </div>
-          })}
+          ))}
         </div>
       </section>
 
