@@ -106,7 +106,8 @@ console.log("SHOPIFY PRODUCTS:", products);
           gap: "20px",
           marginTop: "20px"
         }}>
-          {products.map((p) => (
+          {products.map((p) => {
+            const imageUrl = p.node.images?.edges?.[0]?.node?.url;
             <div
               key={p.node.id}
               style={{
@@ -145,7 +146,7 @@ console.log("SHOPIFY PRODUCTS:", products);
 </div>
 </div>
             </div>
-          ))}
+          })}
         </div>
       </section>
 
