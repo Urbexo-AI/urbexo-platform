@@ -139,7 +139,7 @@ console.log("SHOPIFY PRODUCTS:", products);
   }}
 >
   ${Number(
-    p.node.priceRange?.minVariantPrice?.amount
+    p.node.priceRange?.minVariantPrice?.amount || 0
   ).toFixed(2)}
 </div>
 </div>
