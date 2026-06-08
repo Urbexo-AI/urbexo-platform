@@ -9,6 +9,7 @@ async function getProducts() {
         node {
           id
           title
+          Vendor
           
           priceRange {
           minVariantPrice {
@@ -35,6 +36,13 @@ async function getProducts() {
 
 export default async function Home() {
   const products = await getProducts() || [];
+  const vendors = [
+  ...new Set(
+    products
+      .map((p) => p.node.vendor)
+      .filter(Boolean)
+  )
+];
 
 console.log("SHOPIFY PRODUCTS:", products); 
 
@@ -77,17 +85,18 @@ console.log("SHOPIFY PRODUCTS:", products);
           gap: "20px",
           marginTop: "20px"
         }}>
-          <div style={{ background: "#fafafa", padding: "20px", borderRadius: "12px" }}>
-            Mermaid Aquariums
-          </div>
-
-          <div style={{ background: "#fafafa", padding: "20px", borderRadius: "12px" }}>
-            SP Center
-          </div>
-
-          <div style={{ background: "#fafafa", padding: "20px", borderRadius: "12px" }}>
-            Local Marketplace
-          </div>
+          {vendors.map((vendor) => (
+  <div
+    key={vendor}
+    style={{
+      background: "#fafafa",
+      padding: "20px",
+      borderRadius: "12px"
+    }}
+  >
+    {vendor}
+  </div>
+))}
         </div>
       </section>
 
