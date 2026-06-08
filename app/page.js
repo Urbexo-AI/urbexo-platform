@@ -9,6 +9,13 @@ async function getProducts() {
         node {
           id
           title
+          
+          priceRange {
+          minVariantPrice {
+            amount
+          }
+         }
+
           images(first: 1) {
             edges {
               node {
