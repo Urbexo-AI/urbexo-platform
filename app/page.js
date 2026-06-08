@@ -107,43 +107,35 @@ console.log("SHOPIFY PRODUCTS:", products);
           marginTop: "20px"
         }}>
           {products.map((p) => (
-            <div
-              key={p.node.id}
-              style={{
-                background: "#fafafa",
-                padding: "20px",
-                borderRadius: "12px"
-              }}
-            >
-             {p.node.images?.edges?.[0]?.node?.url && (
-  <img
-    src={p.node.images.edges[0].node.url}
-    alt={p.node.title}
-
+  <div
+    key={p.node.id}
     style={{
-      width: "100%",
-      height: "160px",
-      objectFit: "cover",
-      borderRadius: "8px",
-      marginBottom: "10px"
+      background: "#fafafa",
+      padding: "20px",
+      borderRadius: "12px"
     }}
-  />
-)}
+  >
+    {p.node.images?.edges?.[0]?.node?.url && (
+      <img
+        src={p.node.images.edges[0].node.url}
+        alt={p.node.title}
+        style={{
+          width: "100%",
+          height: "160px",
+          objectFit: "cover",
+          borderRadius: "8px",
+          marginBottom: "10px"
+        }}
+      />
+    )}
 
-  <div>{p.node.title}</div>
-    <div
-  style={{
-    fontSize: "14px",
-    fontWeight: "bold",
-    marginTop: "6px"
-  }}
->
-  ${Number(
-    p.node.priceRange?.minVariantPrice?.amount || 0
-  ).toFixed(2)}
-</div>
-</div>
-          ))}
+    <div>{p.node.title}</div>
+
+    <div style={{ fontSize: "14px", fontWeight: "bold", marginTop: "6px" }}>
+      ${Number(p.node.priceRange?.minVariantPrice?.amount || 0).toFixed(2)}
+    </div>
+  </div>
+))}
         </div>
       </section>
 
