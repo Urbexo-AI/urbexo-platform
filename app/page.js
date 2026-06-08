@@ -9,7 +9,6 @@ async function getProducts() {
         node {
           id
           title
-          Vendor
           
           priceRange {
           minVariantPrice {
