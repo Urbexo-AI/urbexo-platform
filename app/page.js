@@ -131,6 +131,17 @@ console.log("SHOPIFY PRODUCTS:", products);
 )}
 
   <div>{p.node.title}</div>
+    <div
+  style={{
+    fontSize: "14px",
+    fontWeight: "bold",
+    marginTop: "6px"
+  }}
+>
+  ${Number(
+    p.node.priceRange?.minVariantPrice?.amount
+  ).toFixed(2)}
+</div>
 </div>
             </div>
           ))}
