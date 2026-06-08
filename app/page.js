@@ -16,7 +16,7 @@ async function getProducts() {
           }
          }
 
-          images(first: 1) {
+          images(first: 5) {
             edges {
               node {
                 url
@@ -116,19 +116,22 @@ console.log("SHOPIFY PRODUCTS:", products);
               }}
             >
              <div>
-{p.node.images?.edges?.[0]?.node?.url && (
-  <img
-    src={p.node.images.edges[0].node.url}
-    alt={p.node.title}
-    style={{
-      width: "100%",
-      height: "160px",
-      objectFit: "cover",
-      borderRadius: "8px",
-      marginBottom: "10px"
-    }}
-  />
-)}
+<div style={{ display: "flex", gap: "6px", overflowX: "auto", marginBottom: "10px" }}>
+  {p.node.images?.edges?.map((img, i) => (
+    <img
+      key={i}
+      src={img.node.url}
+      alt={p.node.title}
+      style={{
+        width: "80px",
+        height: "80px",
+        objectFit: "cover",
+        borderRadius: "6px",
+        flexShrink: 0
+      }}
+    />
+  ))}
+</div>
 
   <div>{p.node.title}</div>
     <div
