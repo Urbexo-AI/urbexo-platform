@@ -9,8 +9,6 @@ async function getProducts() {
         node {
           id
           title
-          Vendor
-          
           images(first: 1) {
             edges {
               node {
