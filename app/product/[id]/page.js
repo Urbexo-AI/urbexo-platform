@@ -77,6 +77,32 @@ export default async function ProductPage({ params }) {
             Vendor: {product.vendor}
           </p>
 
+            {product.variants?.edges?.length > 1 && (
+  <div style={{ marginTop: "20px" }}>
+    <h3>Options</h3>
+
+    <div style={{ display: "flex", gap: "10px" }}>
+      {product.variants.edges
+        .map((v) => v.node)
+        .filter((v) => v.title !== "Default Title")
+        .map((v) => (
+          <button
+            key={v.id}
+            style={{
+              padding: "8px 12px",
+              border: "1px solid #ddd",
+              borderRadius: "6px",
+              background: "white",
+              cursor: "pointer"
+            }}
+          >
+            {v.title}
+          </button>
+        ))}
+    </div>
+  </div>
+)}
+
           <p
             style={{
               fontSize: "22px",
@@ -110,43 +136,6 @@ export default async function ProductPage({ params }) {
             <div style={{ marginTop: "30px" }}>
               <h3>Variants</h3>
 
-              {product.variants.edges
-                .filter(
-                  (v) =>
-                    v.node.title !== "Default Title"
-                )
-                .map((v) => {
-                  const variant = v.node;
-
-                  return (
-                    <div
-                      key={variant.id}
-                      style={{
-                        padding: "10px",
-                        border: "1px solid #ddd",
-                        borderRadius: "8px",
-                        marginBottom: "10px",
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontWeight: "bold",
-                        }}
-                      >
-                        {variant.title}
-                      </div>
-
-                      <div>
-                        $
-                        {Number(
-                          variant.price?.amount || 0
-                        ).toFixed(2)}
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
-          )}
         </div>
       </div>
     </main>
