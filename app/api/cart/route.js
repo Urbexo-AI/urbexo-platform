@@ -22,7 +22,10 @@ export async function POST(req) {
     ],
   });
 
+  const checkoutUrl =
+    res?.data?.cartCreate?.cart?.checkoutUrl;
+
   return Response.json({
-    checkoutUrl: res.data.cartCreate.cart.checkoutUrl,
+    checkoutUrl,
   });
 }
