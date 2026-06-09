@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function VariantSelector({ variants, onChange }) {
+export default function VariantSelector({ variants, onSelect }) {
   const list = variants?.map((v) => v.node) || [];
 
   const validList = list.filter(
@@ -14,9 +14,9 @@ export default function VariantSelector({ variants, onChange }) {
   const [selected, setSelected] = useState(defaultVariant);
 
   function select(v) {
-    setSelected(v);
-    onChange?.(v);
-  }
+  setSelected(v);
+  onSelect?.(v);
+}
 
   if (validList.length <= 1) return null;
 
