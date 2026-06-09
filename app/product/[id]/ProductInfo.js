@@ -6,41 +6,39 @@ import VariantSelector from "./VariantSelector";
 export default function ProductInfo({ product }) {
   const variants = product.variants?.edges || [];
 
-  const realVariants = variants
-    .map((v) => v.node)
-    .filter((v) => v.title !== "Default Title");
+ const firstVariant = realVariants[0] || variants?.[0]?.node;
 
-  const fallbackVariant = {
-    id: variants?.[0]?.node?.id,
-    price: {
-      amount:
-        product.priceRange?.minVariantPrice?.amount || 0,
-    },
-  };
+const [selectedVariant, setSelectedVariant] =
+  useState(firstVariant);
 
-  const [selectedVariant, setSelectedVariant] =
-    useState(realVariants[0] || fallbackVariant);
+ async function handleAddToCart() {
+  console.log("ADD TO CART CLICKED");
 
-  async function handleAddToCart() {
-    if (!selectedVariant?.id) return;
-
-    const res = await fetch("/api/cart", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        variantId: selectedVariant.id,
-      }),
-    });
-
-    const data = await res.json();
-
-    if (data?.checkoutUrl) {
-      window.location.href = data.checkoutUrl;
-    }
+  if (!selectedVariant?.id) {
+    console.error("No variant selected");
+    return;
   }
 
+  const res = await fetch("/api/cart", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      variantId: selectedVariant.id,
+    }),
+  });
+
+  const data = await res.json();
+
+  console.log("API RESPONSE:", data);
+
+  if (data?.checkoutUrl) {
+    window.location.href = data.checkoutUrl;
+  } else {
+    console.error("Missing checkoutUrl", data);
+  }
+}
   return (
     <div>
       <h1>{product.title}</h1>
