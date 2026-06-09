@@ -34,7 +34,8 @@ async function getProducts() {
 }
 
 export default async function Home() {
-  const products = Array.isArray(await getProducts()) ? await getProducts() : [];
+  const productsData = await getProducts();
+const products = Array.isArray(productsData) ? productsData : [];
 console.log("SHOPIFY PRODUCTS:", products); 
 
   return (
