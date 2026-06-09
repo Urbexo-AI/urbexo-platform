@@ -33,10 +33,6 @@ async function getProduct(id) {
       price {
         amount
       }
-      selectedOptions {
-        name
-        value
-      }
     }
   }
 }
