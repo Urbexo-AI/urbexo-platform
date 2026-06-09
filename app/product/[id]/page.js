@@ -93,6 +93,10 @@ export default async function ProductPage({ params }) {
           >
             ${Number(product.priceRange?.minVariantPrice?.amount || 0).toFixed(2)}
           </p>
+     <VariantSelector
+  variants={product.variants?.edges || []}
+  onChange={(v) => console.log("selected variant:", v)}
+/>
 
           {/* Variants (safe display only) */}
           {hasVariants && (
