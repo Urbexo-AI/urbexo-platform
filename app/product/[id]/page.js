@@ -96,33 +96,11 @@ export default async function ProductPage({ params }) {
               product.priceRange?.minVariantPrice?.amount || 0
             ).toFixed(2)}
           </p>
-          {/* Variant Selector */}
-{hasMultipleVariants && (
-  <div style={{ marginTop: "20px" }}>
-    <h3>Options</h3>
-
-    <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-      {variants
-        .map((v) => v.node)
-        .filter((v) => v.title !== "Default Title")
-        .map((v) => (
-          <button
-            key={v.id}
-            style={{
-              padding: "8px 12px",
-              border: "1px solid #ddd",
-              borderRadius: "6px",
-              background: "white",
-              cursor: "pointer",
-            }}
-          >
-            {v.title}
-          </button>
-        ))}
-    </div>
-  </div>
-)}
-
+          <VariantSelector
+  variants={product.variants?.edges || []}
+  onChange={(v) => console.log("selected variant:", v)}
+/>
+         
 
           {/* Variants (ONLY if more than 1 real variant) */}
           {hasMultipleVariants && (
