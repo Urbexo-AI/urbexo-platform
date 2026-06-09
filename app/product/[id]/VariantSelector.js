@@ -44,16 +44,5 @@ export default function VariantSelector({ variants, onChange }) {
           </button>
         ))}
       </div>
-
-      {/* Live Price */}
-      <div
-        style={{
-          marginTop: "10px",
-          fontWeight: "bold",
-        }}
-      >
-        ${Number(selected?.price?.amount || 0).toFixed(2)}
-      </div>
     </div>
   );
-}
