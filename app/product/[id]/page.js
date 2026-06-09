@@ -11,11 +11,13 @@ async function getProduct(id) {
         title
         vendor
         descriptionHtml
+
         priceRange {
           minVariantPrice {
             amount
           }
         }
+
         images(first: 20) {
           edges {
             node {
@@ -23,6 +25,7 @@ async function getProduct(id) {
             }
           }
         }
+
         variants(first: 20) {
           edges {
             node {
@@ -52,13 +55,12 @@ export default async function ProductPage({ params }) {
     return <div>Product not found</div>;
   }
 
+  const variants = product.variants?.edges || [];
+  const hasMultipleVariants =
+    variants.filter((v) => v.node.title !== "Default Title").length > 1;
+
   return (
-    <main
-      style={{
-        padding: "40px",
-        fontFamily: "Arial",
-      }}
-    >
+    <main style={{ padding: "40px", fontFamily: "Arial" }}>
       <div
         style={{
           display: "grid",
@@ -66,43 +68,22 @@ export default async function ProductPage({ params }) {
           gap: "40px",
         }}
       >
+        {/* Left - Image Gallery */}
         <div>
           <ImageGallery images={product.images} />
         </div>
 
+        {/* Right - Product Info */}
         <div>
+          {/* Title */}
           <h1>{product.title}</h1>
 
+          {/* Vendor */}
           <p style={{ color: "#666" }}>
             Vendor: {product.vendor}
           </p>
 
-            {product.variants?.edges?.length > 1 && (
-  <div style={{ marginTop: "20px" }}>
-    <h3>Options</h3>
-
-    <div style={{ display: "flex", gap: "10px" }}>
-      {product.variants.edges
-        .map((v) => v.node)
-        .filter((v) => v.title !== "Default Title")
-        .map((v) => (
-          <button
-            key={v.id}
-            style={{
-              padding: "8px 12px",
-              border: "1px solid #ddd",
-              borderRadius: "6px",
-              background: "white",
-              cursor: "pointer"
-            }}
-          >
-            {v.title}
-          </button>
-        ))}
-    </div>
-  </div>
-)}
-
+          {/* Price */}
           <p
             style={{
               fontSize: "22px",
@@ -116,6 +97,40 @@ export default async function ProductPage({ params }) {
             ).toFixed(2)}
           </p>
 
+          {/* Variants (ONLY if more than 1 real variant) */}
+          {hasMultipleVariants && (
+            <div style={{ marginTop: "20px" }}>
+              <h3>Options</h3>
+
+              <div
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  flexWrap: "wrap",
+                }}
+              >
+                {variants
+                  .map((v) => v.node)
+                  .filter((v) => v.title !== "Default Title")
+                  .map((v) => (
+                    <button
+                      key={v.id}
+                      style={{
+                        padding: "8px 12px",
+                        border: "1px solid #ddd",
+                        borderRadius: "6px",
+                        background: "white",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {v.title}
+                    </button>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {/* Description */}
           <div
             style={{
               marginTop: "20px",
@@ -123,19 +138,9 @@ export default async function ProductPage({ params }) {
               lineHeight: "1.6",
             }}
             dangerouslySetInnerHTML={{
-              __html:
-                product.descriptionHtml ||
-                product.description ||
-                "",
+              __html: product.descriptionHtml || "",
             }}
           />
-
-          {product.variants?.edges?.some(
-            (v) => v.node.title !== "Default Title"
-          ) && (
-            <div style={{ marginTop: "30px" }}>
-              <h3>Variants</h3>
-
         </div>
       </div>
     </main>
