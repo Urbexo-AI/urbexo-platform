@@ -1,5 +1,6 @@
 import { shopifyFetch } from "../../../lib/shopify";
 import ImageGallery from "./ImageGallery";
+import VariantSelector from "./VariantSelector";
 
 async function getProduct(id) {
   const cleanId = id.replace("gid://shopify/Product/", "");
@@ -96,6 +97,11 @@ export default async function ProductPage({ params }) {
               product.priceRange?.minVariantPrice?.amount || 0
             ).toFixed(2)}
           </p>
+
+          <VariantSelector
+  variants={product.variants?.edges || []}
+  onSelect={(v) => console.log("Selected Variant:", v)}
+/>
 
           {/* Variants (ONLY if more than 1 real variant) */}
           {hasMultipleVariants && (
