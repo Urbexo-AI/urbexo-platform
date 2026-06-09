@@ -1,4 +1,5 @@
 import { shopifyFetch } from "../../../lib/shopify";
+import ImageGallery from "./ImageGallery";
 
 async function getProduct(id) {
   const query = `
