@@ -67,21 +67,45 @@ export default async function ProductPage({ params }) {
         </div>
 
         {/* Right Product Info */}
-        <div>
-          <h1>{product.title}</h1>
+<div>
+  <h1>{product.title}</h1>
 
-          <p style={{ color: "#666" }}>
-            Vendor: {product.vendor}
-          </p>
+  <p style={{ color: "#666" }}>
+    Vendor: {product.vendor}
+  </p>
 
-          <p style={{ fontSize: "22px", marginTop: "10px" }}>
-            ${Number(product.priceRange?.minVariantPrice?.amount || 0).toFixed(2)}
-          </p>
+  <p style={{ fontSize: "22px", marginTop: "10px" }}>
+    ${Number(product.priceRange?.minVariantPrice?.amount || 0).toFixed(2)}
+  </p>
 
+  {/* Variant Selector */}
+  <div style={{ marginTop: "20px" }}>
+
+    <h3 style={{ marginBottom: "10px" }}>Variants</h3>
+
+    {product.variants?.edges?.map((v) => {
+      const variant = v.node;
+
+      return (
+        <div
+          key={variant.id}
+          style={{
+            padding: "10px",
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            marginBottom: "10px"
+          }}
+        >
+          <div style={{ fontWeight: "bold" }}>
+            {variant.title}
+          </div>
+
+          <div style={{ color: "#333", marginTop: "5px" }}>
+            ${Number(variant.price?.amount || 0).toFixed(2)}
+          </div>
         </div>
+      );
+    })}
 
-      </div>
-
-    </main>
-  );
-}
+  </div>
+</div>
