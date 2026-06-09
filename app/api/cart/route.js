@@ -3,6 +3,13 @@ import { shopifyFetch } from "@/lib/shopify";
 export async function POST(req) {
   const { variantId } = await req.json();
 
+  if (!variantId) {
+    return Response.json(
+      { error: "Missing variantId" },
+      { status: 400 }
+    );
+  }
+
   const mutation = `
     mutation cartCreate($lines: [CartLineInput!]!) {
       cartCreate(input: { lines: $lines }) {
@@ -25,7 +32,12 @@ export async function POST(req) {
   const checkoutUrl =
     res?.data?.cartCreate?.cart?.checkoutUrl;
 
-  return Response.json({
-    checkoutUrl,
-  });
+  if (!checkoutUrl) {
+    return Response.json(
+      { error: "No checkoutUrl returned" },
+      { status: 500 }
+    );
+  }
+
+  return Response.json({ checkoutUrl });
 }
