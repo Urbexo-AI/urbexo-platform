@@ -149,6 +149,7 @@ console.log("SHOPIFY PRODUCTS:", products);
 </div>
 </div>
             </div>
+           </Link>
           ))}
         </div>
       </section>
