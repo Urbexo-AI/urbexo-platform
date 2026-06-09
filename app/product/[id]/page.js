@@ -56,8 +56,11 @@ export default async function ProductPage({ params }) {
   }
 
   const variants = product.variants?.edges || [];
-  const hasMultipleVariants =
-    variants.filter((v) => v.node.title !== "Default Title").length > 1;
+  const realVariants = variants
+    .map((v) => v.node)
+    .filter((v) => v.title !== "Default Title");
+
+  const hasVariants = realVariants.length > 1;
 
   return (
     <main style={{ padding: "40px", fontFamily: "Arial" }}>
@@ -68,22 +71,19 @@ export default async function ProductPage({ params }) {
           gap: "40px",
         }}
       >
-        {/* Left - Image Gallery */}
+        {/* Left - Images */}
         <div>
           <ImageGallery images={product.images} />
         </div>
 
-        {/* Right - Product Info */}
+        {/* Right - Info */}
         <div>
-          {/* Title */}
           <h1>{product.title}</h1>
 
-          {/* Vendor */}
           <p style={{ color: "#666" }}>
             Vendor: {product.vendor}
           </p>
 
-          {/* Price */}
           <p
             style={{
               fontSize: "22px",
@@ -91,46 +91,29 @@ export default async function ProductPage({ params }) {
               fontWeight: "bold",
             }}
           >
-            $
-            {Number(
-              product.priceRange?.minVariantPrice?.amount || 0
-            ).toFixed(2)}
+            ${Number(product.priceRange?.minVariantPrice?.amount || 0).toFixed(2)}
           </p>
-          <VariantSelector
-  variants={product.variants?.edges || []}
-  onChange={(v) => console.log("selected variant:", v)}
-/>
-         
 
-          {/* Variants (ONLY if more than 1 real variant) */}
-          {hasMultipleVariants && (
+          {/* Variants (safe display only) */}
+          {hasVariants && (
             <div style={{ marginTop: "20px" }}>
               <h3>Options</h3>
 
-              <div
-                style={{
-                  display: "flex",
-                  gap: "10px",
-                  flexWrap: "wrap",
-                }}
-              >
-                {variants
-                  .map((v) => v.node)
-                  .filter((v) => v.title !== "Default Title")
-                  .map((v) => (
-                    <button
-                      key={v.id}
-                      style={{
-                        padding: "8px 12px",
-                        border: "1px solid #ddd",
-                        borderRadius: "6px",
-                        background: "white",
-                        cursor: "pointer",
-                      }}
-                    >
-                      {v.title}
-                    </button>
-                  ))}
+              <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                {realVariants.map((v) => (
+                  <button
+                    key={v.id}
+                    style={{
+                      padding: "8px 12px",
+                      border: "1px solid #ddd",
+                      borderRadius: "6px",
+                      background: "white",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {v.title}
+                  </button>
+                ))}
               </div>
             </div>
           )}
