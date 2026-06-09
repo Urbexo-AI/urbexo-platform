@@ -4,38 +4,39 @@ import ImageGallery from "./ImageGallery";
 async function getProduct(id) {
   const query = `
     query getProduct($id: ID!) {
-      product(id: $id) {
-        id
-        title
-        vendor
+  product(id: $id) {
+    id
+    title
+    vendor
+    description
 
-        priceRange {
-          minVariantPrice {
+    priceRange {
+      minVariantPrice {
+        amount
+      }
+    }
+
+    images(first: 20) {
+      edges {
+        node {
+          url
+        }
+      }
+    }
+
+    variants(first: 20) {
+      edges {
+        node {
+          id
+          title
+          price {
             amount
-          }
-        }
-
-        images(first: 20) {
-          edges {
-            node {
-              url
-            }
-          }
-        }
-
-        variants(first: 20) {
-          edges {
-            node {
-              id
-              title
-              price {
-                amount
-              }
-            }
           }
         }
       }
     }
+  }
+}
   `;
 
   const res = await shopifyFetch(query, {
@@ -80,7 +81,7 @@ export default async function ProductPage({ params }) {
     ).toFixed(2)}
   </p>
 
-  {/* Product Description */}
+  {/* Description */}
   {product.description && (
     <div
       style={{
@@ -94,12 +95,10 @@ export default async function ProductPage({ params }) {
     />
   )}
 
-  {/* Variants (ONLY SHOW IF MULTIPLE) */}
+  {/* Variants (ONLY IF MORE THAN 1 REAL VARIANT) */}
   {product.variants?.edges?.length > 1 && (
     <div style={{ marginTop: "20px" }}>
-      <h3 style={{ marginBottom: "10px" }}>
-        Variants
-      </h3>
+      <h3>Variants</h3>
 
       {product.variants.edges.map((v) => {
         const variant = v.node;
@@ -114,11 +113,9 @@ export default async function ProductPage({ params }) {
               marginBottom: "10px"
             }}
           >
-            <div style={{ fontWeight: "bold" }}>
-              {variant.title}
-            </div>
+            <div>{variant.title}</div>
 
-            <div style={{ color: "#333", marginTop: "5px" }}>
+            <div style={{ fontWeight: "bold" }}>
               ${Number(variant.price?.amount || 0).toFixed(2)}
             </div>
           </div>
