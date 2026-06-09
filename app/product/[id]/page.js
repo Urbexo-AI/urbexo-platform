@@ -26,18 +26,20 @@ async function getProduct(id) {
         }
 
         variants(first: 20) {
-          edges {
-            node {
-              id
-              title
-              price {
-                amount
-              }
-            }
-          }
-        }
+  edges {
+    node {
+      id
+      title
+      price {
+        amount
+      }
+      selectedOptions {
+        name
+        value
       }
     }
+  }
+}
   `;
 
   const res = await shopifyFetch(query, {
@@ -49,6 +51,7 @@ async function getProduct(id) {
 
 export default async function ProductPage({ params }) {
   const product = await getProduct(params.id);
+  console.log("PRODUCT DEBUG:", product);
 
   if (!product) {
     return <div>Product not found</div>;
