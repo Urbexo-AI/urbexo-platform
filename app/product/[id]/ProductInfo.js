@@ -10,16 +10,36 @@ export default function ProductInfo({ product }) {
     .map((v) => v.node)
     .filter((v) => v.title !== "Default Title");
 
-  const defaultVariant =
-    realVariants[0] || {
-      price: {
-        amount:
-          product.priceRange?.minVariantPrice?.amount || 0,
-      },
-    };
+  const fallbackVariant = {
+    id: variants?.[0]?.node?.id,
+    price: {
+      amount:
+        product.priceRange?.minVariantPrice?.amount || 0,
+    },
+  };
 
   const [selectedVariant, setSelectedVariant] =
-    useState(defaultVariant);
+    useState(realVariants[0] || fallbackVariant);
+
+  async function handleAddToCart() {
+    if (!selectedVariant?.id) return;
+
+    const res = await fetch("/api/cart", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        variantId: selectedVariant.id,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (data?.checkoutUrl) {
+      window.location.href = data.checkoutUrl;
+    }
+  }
 
   return (
     <div>
@@ -44,40 +64,23 @@ export default function ProductInfo({ product }) {
 
       <VariantSelector
         variants={variants}
-        onSelect={(variant) =>
-          setSelectedVariant(variant)
-        }
+        onSelect={(v) => setSelectedVariant(v)}
       />
-          <button
-  onClick={async () => {
-      console.log("variant:", selectedVariant);
-    
-    const res = await fetch("/api/cart", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        variantId: selectedVariant.id,
-      }),
-    });
 
-    const data = await res.json();
-
-    window.location.href = data.checkoutUrl;
-  }}
-  style={{
-    marginTop: "15px",
-    padding: "12px 20px",
-    background: "black",
-    color: "white",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-  }}
->
-  Add to Cart
-</button>
+      <button
+        onClick={handleAddToCart}
+        style={{
+          marginTop: "15px",
+          padding: "12px 20px",
+          background: "black",
+          color: "white",
+          border: "none",
+          borderRadius: "8px",
+          cursor: "pointer",
+        }}
+      >
+        Add to Cart
+      </button>
 
       <div
         style={{
