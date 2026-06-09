@@ -1,4 +1,5 @@
 export const dynamic = "force-dynamic";
+import Link from "next/link";
 import { shopifyFetch } from "../lib/shopify";
 
 async function getProducts() {
@@ -106,15 +107,19 @@ console.log("SHOPIFY PRODUCTS:", products);
           gap: "20px",
           marginTop: "20px"
         }}>
-          {products.map((p) => (
-            <div
-              key={p.node.id}
-              style={{
-                background: "#fafafa",
-                padding: "20px",
-                borderRadius: "12px"
-              }}
-            >
+         {products.map((p) => (
+  <Link
+    key={p.node.id}
+    href={`/product/${p.node.id.replace("gid://shopify/Product/", "")}`}
+    style={{ textDecoration: "none", color: "inherit" }}
+  >
+    <div
+      style={{
+        background: "#fafafa",
+        padding: "20px",
+        borderRadius: "12px"
+      }}
+    >
              <div>
 {p.node.images?.edges?.[0]?.node?.url && (
   <img
