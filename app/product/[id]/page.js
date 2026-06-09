@@ -2,27 +2,45 @@ import { shopifyFetch } from "../../../lib/shopify";
 import ImageGallery from "./ImageGallery";
 
 async function getProduct(id) {
-  const query = `
-    query getProduct($id: ID!) {
-      product(id: $id) {
-        id
-        title
-        vendor
-        priceRange {
-          minVariantPrice {
-            amount
+const query = `
+  query getProduct($id: ID!) {
+    product(id: $id) {
+      id
+      title
+      vendor
+
+      priceRange {
+        minVariantPrice {
+          amount
+        }
+      }
+
+      images(first: 20) {
+        edges {
+          node {
+            url
           }
         }
-        images(first: 20) {
-          edges {
-            node {
-              url
+      }
+
+      variants(first: 20) {
+        edges {
+          node {
+            id
+            title
+            selectedOptions {
+              name
+              value
+            }
+            price {
+              amount
             }
           }
         }
       }
     }
-  `;
+  }
+`;
 
   const res = await shopifyFetch(query, {
     id: `gid://shopify/Product/${id}`,
