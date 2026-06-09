@@ -48,6 +48,34 @@ export default function ProductInfo({ product }) {
           setSelectedVariant(variant)
         }
       />
+          <button
+  onClick={async () => {
+    const res = await fetch("/api/cart", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        variantId: selectedVariant.id,
+      }),
+    });
+
+    const data = await res.json();
+
+    window.location.href = data.checkoutUrl;
+  }}
+  style={{
+    marginTop: "15px",
+    padding: "12px 20px",
+    background: "black",
+    color: "white",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+  }}
+>
+  Add to Cart
+</button>
 
       <div
         style={{
