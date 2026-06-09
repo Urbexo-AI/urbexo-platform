@@ -98,29 +98,6 @@ export default async function ProductPage({ params }) {
   variants={product.variants?.edges || []}
 />
 
-          {/* Variants (safe display only) */}
-          {hasVariants && (
-            <div style={{ marginTop: "20px" }}>
-              <h3>Options</h3>
-
-              <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-                {realVariants.map((v) => (
-                  <button
-                    key={v.id}
-                    style={{
-                      padding: "8px 12px",
-                      border: "1px solid #ddd",
-                      borderRadius: "6px",
-                      background: "white",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {v.title}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
 
           {/* Description */}
           <div
