@@ -66,7 +66,11 @@ const [selectedVariant, setSelectedVariant] =
       />
 
       <button
-        onClick={handleAddToCart}
+        <button
+  onClick={() => {
+    console.log("CLICK WORKS");
+    alert("CLICK WORKS");
+  }}
         style={{
           marginTop: "15px",
           padding: "12px 20px",
