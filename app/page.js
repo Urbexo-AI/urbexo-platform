@@ -106,43 +106,39 @@ console.log("SHOPIFY PRODUCTS:", products);
           gap: "20px",
           marginTop: "20px"
         }}>
-{products.map((p) => {
-  const productId = p.node.id.replace("gid://shopify/Product/", "");
-  const imageUrl = p.node.images?.edges?.[0]?.node?.url;
-
-  return (
-    <Link key={p.node.id} href={`/product/${productId}`}>
-      <div
+          {products.map((p) => (
+          <Link
+  href={`/product/${p.node.id.replace("gid://shopify/Product/", "")}`}
+>
+<div
+    key={p.node.id}
+    style={{
+      background: "#fafafa",
+      padding: "20px",
+      borderRadius: "12px"
+    }}
+  >
+    {p.node.images?.edges?.[0]?.node?.url && (
+      <img
+        src={p.node.images.edges[0].node.url}
+        alt={p.node.title}
         style={{
-          background: "#fafafa",
-          padding: "20px",
-          borderRadius: "12px",
-          cursor: "pointer"
+          width: "100%",
+          height: "160px",
+          objectFit: "cover",
+          borderRadius: "8px",
+          marginBottom: "10px"
         }}
-      >
-        {imageUrl && (
-          <img
-            src={imageUrl}
-            alt={p.node.title}
-            style={{
-              width: "100%",
-              height: "160px",
-              objectFit: "cover",
-              borderRadius: "8px",
-              marginBottom: "10px"
-            }}
-          />
-        )}
+      />
+    )}
 
-        <div>{p.node.title}</div>
+    <div>{p.node.title}</div>
 
-        <div style={{ fontSize: "14px", fontWeight: "bold", marginTop: "6px" }}>
-          ${Number(p.node.priceRange?.minVariantPrice?.amount || 0).toFixed(2)}
-        </div>
-      </div>
-    </Link>
-  );
-})}
+    <div style={{ fontSize: "14px", fontWeight: "bold", marginTop: "6px" }}>
+      ${Number(p.node.priceRange?.minVariantPrice?.amount || 0).toFixed(2)}
+    </div>
+  </div>
+))}
         </div>
       </section>
 
