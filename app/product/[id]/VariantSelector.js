@@ -1,15 +1,11 @@
 "use client";
 
-import { useState } from "react";
-
-export default function VariantSelector({ variants, onSelect }) {
+export default function VariantSelector({ variants = [] }) {
   const list = variants
     .map((v) => v.node)
     .filter((v) => v.title !== "Default Title");
 
-  const [active, setActive] = useState(null);
-
-  if (list.length <= 1) return null;
+  if (!list || list.length <= 1) return null;
 
   return (
     <div style={{ marginTop: "20px" }}>
@@ -17,25 +13,18 @@ export default function VariantSelector({ variants, onSelect }) {
 
       <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
         {list.map((v) => (
-          <button
+          <div
             key={v.id}
-            onClick={() => {
-              setActive(v.id);
-              onSelect?.(v);
-            }}
             style={{
               padding: "8px 12px",
+              border: "1px solid #ddd",
               borderRadius: "6px",
-              border:
-                active === v.id
-                  ? "2px solid black"
-                  : "1px solid #ddd",
               background: "white",
               cursor: "pointer",
             }}
           >
             {v.title}
-          </button>
+          </div>
         ))}
       </div>
     </div>
