@@ -13,7 +13,7 @@ async function getProduct(id) {
             amount
           }
         }
-        images(first: 10) {
+        images(first: 20) {
           edges {
             node {
               url
@@ -38,27 +38,17 @@ export default async function ProductPage({ params }) {
     return <div>Product not found</div>;
   }
 
-  const imageUrl = product.images?.edges?.[0]?.node?.url;
-
   return (
     <main style={{ padding: "40px", fontFamily: "Arial" }}>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px" }}>
 
-        {/* 左边图片 */}
+        {/* Left Image Gallery */}
         <div>
-          {imageUrl && (
-            <img
-              src={imageUrl}
-              style={{
-                width: "100%",
-                borderRadius: "12px"
-              }}
-            />
-          )}
+          <ImageGallery images={product.images} />
         </div>
 
-        {/* 右边信息 */}
+        {/* Right Product Info */}
         <div>
           <h1>{product.title}</h1>
 
