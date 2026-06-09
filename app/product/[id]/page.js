@@ -1,6 +1,7 @@
 import { shopifyFetch } from "../../../lib/shopify";
 import ImageGallery from "./ImageGallery";
 import VariantSelector from "./VariantSelector";
+import ProductInfo from "./ProductInfo";
 
 async function getProduct(id) {
   const cleanId = id.replace("gid://shopify/Product/", "");
@@ -78,40 +79,9 @@ export default async function ProductPage({ params }) {
         </div>
 
         {/* Right - Info */}
-        <div>
-          <h1>{product.title}</h1>
+        <ProductInfo product={product} />
 
-          <p style={{ color: "#666" }}>
-            Vendor: {product.vendor}
-          </p>
-
-          <p
-            style={{
-              fontSize: "22px",
-              marginTop: "10px",
-              fontWeight: "bold",
-            }}
-          >
-            ${Number(product.priceRange?.minVariantPrice?.amount || 0).toFixed(2)}
-          </p>
-     <VariantSelector
-  variants={product.variants?.edges || []}
-/>
-
-
-          {/* Description */}
-          <div
-            style={{
-              marginTop: "20px",
-              color: "#444",
-              lineHeight: "1.6",
-            }}
-            dangerouslySetInnerHTML={{
-              __html: product.descriptionHtml || "",
-            }}
-          />
-        </div>
-      </div>
-    </main>
+  </div>
+</main>
   );
 }
