@@ -1,5 +1,6 @@
 import { shopifyFetch } from "../../../lib/shopify";
 import ImageGallery from "./ImageGallery";
+import VariantSelector from "./VariantSelector";
 
 async function getProduct(id) {
   const cleanId = id.replace("gid://shopify/Product/", "");
@@ -95,7 +96,6 @@ export default async function ProductPage({ params }) {
           </p>
      <VariantSelector
   variants={product.variants?.edges || []}
-  onChange={(v) => console.log("selected variant:", v)}
 />
 
           {/* Variants (safe display only) */}
