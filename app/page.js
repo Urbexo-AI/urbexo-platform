@@ -34,7 +34,7 @@ async function getProducts() {
 }
 
 export default async function Home() {
-  const products = await getProducts() || [];
+  const products = (await getProducts()) ?? [];
 
 console.log("SHOPIFY PRODUCTS:", products); 
 
@@ -106,7 +106,7 @@ console.log("SHOPIFY PRODUCTS:", products);
           gap: "20px",
           marginTop: "20px"
         }}>
-          {products.map((p) => {
+          {Array.isArray(products) && products.map((p) => {
   const productId = p.node.id.replace("gid://shopify/Product/", "");
   const imageUrl = p.node.images?.edges?.[0]?.node?.url;
 
