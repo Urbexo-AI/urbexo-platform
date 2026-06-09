@@ -46,3 +46,4 @@ export default function VariantSelector({ variants, onChange }) {
       </div>
     </div>
   );
+  }
