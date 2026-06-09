@@ -2,21 +2,20 @@ import { shopifyFetch } from "../../../lib/shopify";
 import ImageGallery from "./ImageGallery";
 
 async function getProduct(id) {
+  const cleanId = id.replace("gid://shopify/Product/", "");
+
   const query = `
     query getProduct($id: ID!) {
       product(id: $id) {
         id
         title
         vendor
-        description
         descriptionHtml
-
         priceRange {
           minVariantPrice {
             amount
           }
         }
-
         images(first: 20) {
           edges {
             node {
@@ -24,22 +23,23 @@ async function getProduct(id) {
             }
           }
         }
-
         variants(first: 20) {
-  edges {
-    node {
-      id
-      title
-      price {
-        amount
+          edges {
+            node {
+              id
+              title
+              price {
+                amount
+              }
+            }
+          }
+        }
       }
     }
-  }
-}
   `;
 
   const res = await shopifyFetch(query, {
-    id: `gid://shopify/Product/${id}`,
+    id: `gid://shopify/Product/${cleanId}`,
   });
 
   return res.data?.product;
