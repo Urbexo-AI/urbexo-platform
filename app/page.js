@@ -16,7 +16,7 @@ async function getProducts() {
           }
          }
 
-          images(first: 20) {
+          images(first: 1) {
             edges {
               node {
                 url
@@ -34,7 +34,7 @@ async function getProducts() {
 }
 
 export default async function Home() {
-  const products = (await getProducts()) ?? [];
+  const products = await getProducts() || [];
 
 console.log("SHOPIFY PRODUCTS:", products); 
 
@@ -106,45 +106,45 @@ console.log("SHOPIFY PRODUCTS:", products);
           gap: "20px",
           marginTop: "20px"
         }}>
-          {Array.isArray(products) && products.map((p) => {
-  const productId = p.node.id.replace("gid://shopify/Product/", "");
-  const imageUrl = p.node.images?.edges?.[0]?.node?.url;
+          {products.map((p) => (
+            <div
+              key={p.node.id}
+              style={{
+                background: "#fafafa",
+                padding: "20px",
+                borderRadius: "12px"
+              }}
+            >
+             <div>
+{p.node.images?.edges?.[0]?.node?.url && (
+  <img
+    src={p.node.images.edges[0].node.url}
+    alt={p.node.title}
+    style={{
+      width: "100%",
+      height: "160px",
+      objectFit: "cover",
+      borderRadius: "8px",
+      marginBottom: "10px"
+    }}
+  />
+)}
 
-  return (
-    <Link
-      key={p.node.id}
-      href={`/product/${productId}`}
-    >
-      <div
-        style={{
-          background: "#fafafa",
-          padding: "20px",
-          borderRadius: "12px"
-        }}
-      >
-        {imageUrl && (
-          <img
-            src={imageUrl}
-            alt={p.node.title}
-            style={{
-              width: "100%",
-              height: "160px",
-              objectFit: "cover",
-              borderRadius: "8px",
-              marginBottom: "10px"
-            }}
-          />
-        )}
-
-        <div>{p.node.title}</div>
-
-        <div style={{ fontSize: "14px", fontWeight: "bold", marginTop: "6px" }}>
-          ${Number(p.node.priceRange?.minVariantPrice?.amount || 0).toFixed(2)}
-        </div>
-      </div>
-    </Link>
-  );
-})}
+  <div>{p.node.title}</div>
+    <div
+  style={{
+    fontSize: "14px",
+    fontWeight: "bold",
+    marginTop: "6px"
+  }}
+>
+  ${Number(
+    p.node.priceRange?.minVariantPrice?.amount || 0
+  ).toFixed(2)}
+</div>
+</div>
+            </div>
+          ))}
         </div>
       </section>
 
