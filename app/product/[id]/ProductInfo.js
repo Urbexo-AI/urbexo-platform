@@ -50,6 +50,8 @@ export default function ProductInfo({ product }) {
       />
           <button
   onClick={async () => {
+      console.log("variant:", selectedVariant);
+    
     const res = await fetch("/api/cart", {
       method: "POST",
       headers: {
