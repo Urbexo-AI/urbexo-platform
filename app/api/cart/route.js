@@ -2,12 +2,8 @@ import { shopifyFetch } from "../../../lib/shopify";
 
 export async function POST(req) {
   try {
-   const {
-  variantId,
-  quantity,
-  cartId,
-} = await req.json();
-    
+    const { variantId, quantity, cartId } = await req.json();
+
     if (!variantId) {
       return Response.json(
         { error: "Missing variantId" },
@@ -15,50 +11,14 @@ export async function POST(req) {
       );
     }
 
-let res;
-
-if (cartId) {
-  const cartLinesAddMutation = `
-    mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
-      cartLinesAdd(cartId: $cartId, lines: $lines) {
-        cart {
-          id
-          checkoutUrl
-        }
-        userErrors {
-          message
-        }
-      }
-    }
-  `;
-
-  res = await shopifyFetch(cartLinesAddMutation, {
-    cartId,
-    lines: [
-      {
-        merchandiseId: variantId,
-        quantity: quantity || 1,
-      },
-    ],
-  });
-} else {
-  res = await shopifyFetch(mutation, {
-    lines: [
-      {
-        merchandiseId: variantId,
-        quantity: quantity || 1,
-      },
-    ],
-  });
-}
-    
-    const mutation = `
+    // 1️⃣ 创建购物车
+    const cartCreateMutation = `
       mutation cartCreate($lines: [CartLineInput!]!) {
         cartCreate(input: { lines: $lines }) {
           cart {
-  checkoutUrl
-  id
-}
+            id
+            checkoutUrl
+          }
           userErrors {
             message
           }
@@ -66,22 +26,53 @@ if (cartId) {
       }
     `;
 
-    const res = await shopifyFetch(mutation, {
-      lines: [
-        {
-          merchandiseId: variantId,
-          quantity: quantity || 1,
-        },
-      ],
-    });
+    // 2️⃣ 追加购物车
+    const cartLinesAddMutation = `
+      mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
+        cartLinesAdd(cartId: $cartId, lines: $lines) {
+          cart {
+            id
+            checkoutUrl
+          }
+          userErrors {
+            message
+          }
+        }
+      }
+    `;
 
+    // 3️⃣ 执行逻辑（核心）
+    let res;
+
+    if (cartId) {
+      res = await shopifyFetch(cartLinesAddMutation, {
+        cartId,
+        lines: [
+          {
+            merchandiseId: variantId,
+            quantity: quantity || 1,
+          },
+        ],
+      });
+    } else {
+      res = await shopifyFetch(cartCreateMutation, {
+        lines: [
+          {
+            merchandiseId: variantId,
+            quantity: quantity || 1,
+          },
+        ],
+      });
+    }
+
+    // 4️⃣ 统一取值
     const checkoutUrl =
-  res?.data?.cartCreate?.cart?.checkoutUrl ||
-  res?.data?.cartLinesAdd?.cart?.checkoutUrl;
+      res?.data?.cartCreate?.cart?.checkoutUrl ||
+      res?.data?.cartLinesAdd?.cart?.checkoutUrl;
 
-const cartId =
-  res?.data?.cartCreate?.cart?.id ||
-  res?.data?.cartLinesAdd?.cart?.id;
+    const newCartId =
+      res?.data?.cartCreate?.cart?.id ||
+      res?.data?.cartLinesAdd?.cart?.id;
 
     if (!checkoutUrl) {
       console.error("Shopify Response:", JSON.stringify(res, null, 2));
@@ -92,10 +83,12 @@ const cartId =
       );
     }
 
+    // 5️⃣ 返回
     return Response.json({
-  checkoutUrl,
-  cartId,
-});
+      checkoutUrl,
+      cartId: newCartId,
+    });
+
   } catch (err) {
     console.error("Cart API Error:", err);
 
