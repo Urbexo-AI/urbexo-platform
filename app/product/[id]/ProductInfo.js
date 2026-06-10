@@ -62,127 +62,94 @@ setCartOpen(true);
   }
 }
   return (
-    <div>
-      <h1>{product.title}</h1>
+  <div>
+    <h1>{product.title}</h1>
 
-      <p style={{ color: "#666" }}>
-        Vendor: {product.vendor}
-      </p>
+    <p style={{ color: "#666" }}>
+      Vendor: {product.vendor}
+    </p>
 
-      <p
-        style={{
-          fontSize: "22px",
-          marginTop: "10px",
-          fontWeight: "bold",
-        }}
-      >
-        $
-        {Number(
-          selectedVariant?.price?.amount || 0
-        ).toFixed(2)}
-      </p>
+    <p style={{ fontSize: "22px", fontWeight: "bold" }}>
+      ${Number(selectedVariant?.price?.amount || 0).toFixed(2)}
+    </p>
 
-      <VariantSelector
-        variants={variants}
-        onSelect={(v) => setSelectedVariant(v)}
-      />
-<div style={{ marginTop: "10px", display: "flex", alignItems: "center", gap: "10px" }}>
-  
-  <button
-    onClick={() => setQuantity(q => Math.max(1, q - 1))}
-    style={{
-      padding: "6px 12px",
-      border: "1px solid #ddd",
-      background: "white",
-      cursor: "pointer"
-    }}
-  >
-    -
-  </button>
+    <VariantSelector
+      variants={variants}
+      onSelect={(v) => setSelectedVariant(v)}
+    />
 
-  <span style={{ minWidth: "30px", textAlign: "center" }}>
-    {quantity}
-  </span>
+    <div style={{ marginTop: "10px", display: "flex", gap: "10px" }}>
+      <button onClick={() => setQuantity(q => Math.max(1, q - 1))}>
+        -
+      </button>
 
-  <button
-    onClick={() => setQuantity(q => q + 1)}
-    style={{
-      padding: "6px 12px",
-      border: "1px solid #ddd",
-      background: "white",
-      cursor: "pointer"
-    }}
-  >
-    +
-  </button>
+      <span>{quantity}</span>
 
-</div>
-          
-    <button
-  onClick={handleAddToCart}
-  disabled={loading}
-  style={{
-    marginTop: "15px",
-    padding: "12px 20px",
-    background: "black",
-    color: "white",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-  }}
->
-  {loading ? "Adding..." : "Add to Cart"}
-</button>
-
-      <div
-        style={{
-          marginTop: "20px",
-          color: "#444",
-          lineHeight: "1.6",
-        }}
-        dangerouslySetInnerHTML={{
-          __html: product.descriptionHtml || "",
-        }}
-      />
+      <button onClick={() => setQuantity(q => q + 1)}>
+        +
+      </button>
     </div>
-{cartOpen && (
-  <div
-    style={{
-      position: "fixed",
-      top: 0,
-      right: 0,
-      width: "360px",
-      height: "100vh",
-      background: "white",
-      boxShadow: "-2px 0 10px rgba(0,0,0,0.1)",
-      padding: "20px",
-      zIndex: 9999,
-    }}
-  >
-    <h2>Cart</h2>
-
-    <p style={{ fontSize: "12px", color: "#666" }}>
-      Cart ID:
-    </p>
-
-    <p style={{ fontSize: "12px" }}>
-      {cartData?.cartId}
-    </p>
 
     <button
-      onClick={() => setCartOpen(false)}
+      onClick={handleAddToCart}
+      disabled={loading}
       style={{
-        marginTop: "20px",
-        padding: "10px",
+        marginTop: "15px",
+        padding: "12px 20px",
         background: "black",
         color: "white",
         border: "none",
-        cursor: "pointer",
+        borderRadius: "8px",
       }}
     >
-      Close
+      {loading ? "Adding..." : "Add to Cart"}
     </button>
+
+    <div
+      style={{ marginTop: "20px", color: "#444" }}
+      dangerouslySetInnerHTML={{
+        __html: product.descriptionHtml || "",
+      }}
+    />
+
+    {/* 🚨 Drawer 必须在 return 内部最后 */}
+    {cartOpen && (
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          right: 0,
+          width: "360px",
+          height: "100vh",
+          background: "white",
+          boxShadow: "-2px 0 10px rgba(0,0,0,0.1)",
+          padding: "20px",
+          zIndex: 9999,
+        }}
+      >
+        <h2>Cart</h2>
+
+        <p style={{ fontSize: "12px", color: "#666" }}>
+          Cart ID:
+        </p>
+
+        <p style={{ fontSize: "12px" }}>
+          {cartData?.cartId}
+        </p>
+
+        <button
+          onClick={() => setCartOpen(false)}
+          style={{
+            marginTop: "20px",
+            padding: "10px",
+            background: "black",
+            color: "white",
+            border: "none",
+          }}
+        >
+          Close
+        </button>
+      </div>
+    )}
   </div>
-)}
-  );
-}
+);
