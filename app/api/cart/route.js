@@ -66,13 +66,12 @@ export async function POST(req) {
     }
 
     // 4️⃣ 统一取值
-    const checkoutUrl =
-      res?.data?.cartCreate?.cart?.checkoutUrl ||
-      res?.data?.cartLinesAdd?.cart?.checkoutUrl;
+    const cart =
+  res?.data?.cartCreate?.cart ||
+  res?.data?.cartLinesAdd?.cart;
 
-    const newCartId =
-      res?.data?.cartCreate?.cart?.id ||
-      res?.data?.cartLinesAdd?.cart?.id;
+const checkoutUrl = cart?.checkoutUrl;
+const newCartId = cart?.id;
 
     if (!checkoutUrl) {
       console.error("Shopify Response:", JSON.stringify(res, null, 2));
@@ -84,10 +83,11 @@ export async function POST(req) {
     }
 
     // 5️⃣ 返回
-    return Response.json({
-      checkoutUrl,
-      cartId: newCartId,
-    });
+   return Response.json({
+  checkoutUrl: cart?.checkoutUrl,
+  cartId: cart?.id,
+  cart,
+});
 
   } catch (err) {
     console.error("Cart API Error:", err);
