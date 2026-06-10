@@ -17,8 +17,12 @@ const [selectedVariant, setSelectedVariant] =
   useState(firstVariant || null);
 
   const [quantity, setQuantity] = useState(1);
+  const [cartOpen, setCartOpen] = useState(false);
+const [cartData, setCartData] = useState(null);
+const [loading, setLoading] = useState(false);
 
  async function handleAddToCart() {
+   setLoading(true);
    const savedCartId = localStorage.getItem("cartId");
    
   console.log("ADD TO CART CLICKED");
@@ -47,9 +51,11 @@ const [selectedVariant, setSelectedVariant] =
    if (data?.cartId) {
   localStorage.setItem("cartId", data.cartId);
 }
+   setCartData(data);
+setCartOpen(true);
 
   if (data?.checkoutUrl) {
-    window.location.href = data.checkoutUrl;
+    
   } else {
     console.error("Missing checkoutUrl", data);
   }
