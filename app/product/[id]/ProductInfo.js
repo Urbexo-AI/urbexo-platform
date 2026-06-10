@@ -45,6 +45,7 @@ const [loading, setLoading] = useState(false);
   });
 
   const data = await res.json();
+   setLoading(false);
 
   console.log("API RESPONSE:", data);
 
@@ -117,21 +118,21 @@ setCartOpen(true);
 
 </div>
           
-      <button
+    <button
   onClick={handleAddToCart}
-
-        style={{
-          marginTop: "15px",
-          padding: "12px 20px",
-          background: "black",
-          color: "white",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
-        }}
-      >
-        Add to Cart
-      </button>
+  disabled={loading}
+  style={{
+    marginTop: "15px",
+    padding: "12px 20px",
+    background: "black",
+    color: "white",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+  }}
+>
+  {loading ? "Adding..." : "Add to Cart"}
+</button>
 
       <div
         style={{
@@ -144,5 +145,44 @@ setCartOpen(true);
         }}
       />
     </div>
+{cartOpen && (
+  <div
+    style={{
+      position: "fixed",
+      top: 0,
+      right: 0,
+      width: "360px",
+      height: "100vh",
+      background: "white",
+      boxShadow: "-2px 0 10px rgba(0,0,0,0.1)",
+      padding: "20px",
+      zIndex: 9999,
+    }}
+  >
+    <h2>Cart</h2>
+
+    <p style={{ fontSize: "12px", color: "#666" }}>
+      Cart ID:
+    </p>
+
+    <p style={{ fontSize: "12px" }}>
+      {cartData?.cartId}
+    </p>
+
+    <button
+      onClick={() => setCartOpen(false)}
+      style={{
+        marginTop: "20px",
+        padding: "10px",
+        background: "black",
+        color: "white",
+        border: "none",
+        cursor: "pointer",
+      }}
+    >
+      Close
+    </button>
+  </div>
+)}
   );
 }
