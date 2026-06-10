@@ -26,8 +26,8 @@ export async function POST(req) {
       mutation cartCreate($lines: [CartLineInput!]!) {
         cartCreate(input: { lines: $lines }) {
           cart {
-  id
   checkoutUrl
+  id
 }
           userErrors {
             message
