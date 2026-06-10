@@ -4,47 +4,56 @@ import VariantSelector from "./VariantSelector";
 import ProductInfo from "./ProductInfo";
 
 async function getProduct(id) {
+  try {
+    const query = `
+      query getProduct($id: ID!) {
+        product(id: $id) {
+          id
+          title
+          vendor
+          descriptionHtml
 
-  const query = `
-    query getProduct($id: ID!) {
-      product(id: $id) {
-        id
-        title
-        vendor
-        descriptionHtml
-
-        priceRange {
-          minVariantPrice {
-            amount
+          priceRange {
+            minVariantPrice {
+              amount
+            }
           }
-        }
 
-        images(first: 20) {
-          edges {
-            node {
-              url
+          images(first: 20) {
+            edges {
+              node {
+                url
+              }
+            }
+          }
+
+          variants(first: 20) {
+            edges {
+              node {
+                id
+                title
+                price {
+                  amount
+                }
+              }
             }
           }
         }
-
-        variants(first: 20) {
-  edges {
-    node {
-      id
-      title
-      price {
-        amount
       }
-    }
+    `;
+
+    const res = await shopifyFetch(query, {
+      id,
+    });
+
+    console.log("SHOPIFY RESPONSE:", res);
+
+    return res?.data?.product || null;
+
+  } catch (err) {
+    console.error("GET PRODUCT ERROR:", err);
+    return null;
   }
-}
-  `;
-
-  const res = await shopifyFetch(query, {
-  id: params.id,
-});
-
-  return res.data?.product;
 }
 
 export default async function ProductPage({ params }) {
