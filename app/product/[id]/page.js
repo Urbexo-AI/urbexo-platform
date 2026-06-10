@@ -29,18 +29,19 @@ async function getProduct(id) {
         }
 
         variants(first: 20) {
-          edges {
-            node {
-              id
-              title
-              price {
-                amount
-              }
-            }
-          }
-        }
+  edges {
+    node {
+      id
+      title
+      price {
+        amount
+      }
+      image {
+        url
       }
     }
+  }
+}
   `;
 
   const res = await shopifyFetch(query, {
