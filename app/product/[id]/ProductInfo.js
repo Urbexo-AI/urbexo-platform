@@ -19,6 +19,8 @@ const [selectedVariant, setSelectedVariant] =
   const [quantity, setQuantity] = useState(1);
 
  async function handleAddToCart() {
+   const savedCartId = localStorage.getItem("cartId");
+   
   console.log("ADD TO CART CLICKED");
 
   if (!selectedVariant?.id) {
