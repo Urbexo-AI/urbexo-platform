@@ -1,4 +1,4 @@
-import { shopifyFetch } from '../../../lib/shopify';
+import { shopifyFetch } from '@/lib/shopify';
 
 export async function POST(req) {
   try {
