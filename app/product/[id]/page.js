@@ -43,8 +43,8 @@ async function getProduct(id) {
     `;
 
     const res = await shopifyFetch(query, {
-      id,
-    });
+  id: `gid://shopify/Product/${id}`,
+});
 
     console.log("SHOPIFY RESPONSE:", res);
 
