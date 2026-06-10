@@ -50,8 +50,8 @@ const [cartData, setCartData] = useState(null);
     localStorage.setItem("cartId", data.cartId);
   }
 
-  setCartData(data);
-  setCartOpen(true);
+  setCartData(data.cart);
+setCartOpen(true);
 }
   return (
     <div>
