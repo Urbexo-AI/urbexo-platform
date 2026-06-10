@@ -1,100 +1,93 @@
 import { shopifyFetch } from "../../../lib/shopify";
+import ImageGallery from "./ImageGallery";
+import VariantSelector from "./VariantSelector";
+import ProductInfo from "./ProductInfo";
 
-export async function POST(req) {
+async function getProduct(id) {
   try {
-    const { variantId, quantity, cartId } = await req.json();
+    const query = `
+      query getProduct($id: ID!) {
+        product(id: $id) {
+          id
+          title
+          vendor
+          descriptionHtml
 
-    if (!variantId) {
-      return Response.json(
-        { error: "Missing variantId" },
-        { status: 400 }
-      );
-    }
+          priceRange {
+            minVariantPrice {
+              amount
+            }
+          }
 
-    // 1️⃣ 创建购物车
-    const cartCreateMutation = `
-      mutation cartCreate($lines: [CartLineInput!]!) {
-        cartCreate(input: { lines: $lines }) {
-          cart {
-            id
-            checkoutUrl
+          images(first: 20) {
+            edges {
+              node {
+                url
+              }
+            }
           }
-          userErrors {
-            message
-          }
-        }
-      }
-    `;
 
-    // 2️⃣ 追加购物车
-    const cartLinesAddMutation = `
-      mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
-        cartLinesAdd(cartId: $cartId, lines: $lines) {
-          cart {
-            id
-            checkoutUrl
-          }
-          userErrors {
-            message
+          variants(first: 20) {
+            edges {
+              node {
+                id
+                title
+                price {
+                  amount
+                }
+              }
+            }
           }
         }
       }
     `;
 
-    // 3️⃣ 执行逻辑（核心）
-    let res;
-
-    if (cartId) {
-      res = await shopifyFetch(cartLinesAddMutation, {
-        cartId,
-        lines: [
-          {
-            merchandiseId: variantId,
-            quantity: quantity || 1,
-          },
-        ],
-      });
-    } else {
-      res = await shopifyFetch(cartCreateMutation, {
-        lines: [
-          {
-            merchandiseId: variantId,
-            quantity: quantity || 1,
-          },
-        ],
-      });
-    }
-
-    // 4️⃣ 统一取值
-    const cart =
-  res?.data?.cartCreate?.cart ||
-  res?.data?.cartLinesAdd?.cart;
-
-const checkoutUrl = cart?.checkoutUrl;
-const newCartId = cart?.id;
-
-    if (!checkoutUrl) {
-      console.error("Shopify Response:", JSON.stringify(res, null, 2));
-
-      return Response.json(
-        { error: "No checkoutUrl returned" },
-        { status: 500 }
-      );
-    }
-
-    // 5️⃣ 返回
-   return Response.json({
-  checkoutUrl: cart?.checkoutUrl,
-  cartId: cart?.id,
-  cart,
+    const res = await shopifyFetch(query, {
+  id: `gid://shopify/Product/${id}`,
 });
 
-  } catch (err) {
-    console.error("Cart API Error:", err);
+    console.log("SHOPIFY RESPONSE:", res);
 
-    return Response.json(
-      { error: "Server error", detail: String(err) },
-      { status: 500 }
-    );
+    return res?.data?.product || null;
+
+  } catch (err) {
+    console.error("GET PRODUCT ERROR:", err);
+    return null;
   }
+}
+
+export default async function ProductPage({ params }) {
+  const product = await getProduct(params.id);
+
+  if (!product) {
+    return <div>Product not found</div>;
+  }
+
+  const variants = product.variants?.edges || [];
+  const realVariants = variants
+    .map((v) => v.node)
+    .filter((v) => v.title !== "Default Title");
+
+  const hasVariants = realVariants.length > 1;
+
+  return (
+    <main style={{ padding: "40px", fontFamily: "Arial" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "40px",
+        }}
+      >
+        {/* Left - Images */}
+        <div>
+          <ImageGallery images={product.images} />
+        </div>
+
+        {/* Right - Info */}
+        <ProductInfo product={product} />
+
+  </div>
+</main>
+  );
 }
