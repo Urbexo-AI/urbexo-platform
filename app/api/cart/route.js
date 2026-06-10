@@ -15,12 +15,20 @@ export async function POST(req) {
       );
     }
 
+    if (cartId) {
+  return Response.json({
+    message: "Existing cart detected",
+    cartId,
+  });
+}
+    
     const mutation = `
       mutation cartCreate($lines: [CartLineInput!]!) {
         cartCreate(input: { lines: $lines }) {
           cart {
-            checkoutUrl
-          }
+  id
+  checkoutUrl
+}
           userErrors {
             message
           }
@@ -38,6 +46,9 @@ export async function POST(req) {
     });
 
     const checkoutUrl = res?.data?.cartCreate?.cart?.checkoutUrl;
+    
+    const cartId =
+  res?.data?.cartCreate?.cart?.id;
 
     if (!checkoutUrl) {
       console.error("Shopify Response:", JSON.stringify(res, null, 2));
@@ -48,7 +59,10 @@ export async function POST(req) {
       );
     }
 
-    return Response.json({ checkoutUrl });
+    return Response.json({
+  checkoutUrl,
+  cartId,
+});
   } catch (err) {
     console.error("Cart API Error:", err);
 
