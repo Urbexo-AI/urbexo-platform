@@ -35,6 +35,8 @@ async function getProduct(id) {
                 price {
                   amount
                 }
+                  product {
+    title
               }
             }
           }
