@@ -98,7 +98,6 @@ setCartOpen(true);
         padding: "12px 20px",
         background: "black",
         color: "white",
-        border: "none",
         borderRadius: "8px",
       }}
     >
@@ -112,7 +111,7 @@ setCartOpen(true);
       }}
     />
 
-    {/* 🚨 Drawer 必须在 return 内部最后 */}
+    {/* 🚨 Drawer 必须在 return 内部 */}
     {cartOpen && (
       <div
         style={{
