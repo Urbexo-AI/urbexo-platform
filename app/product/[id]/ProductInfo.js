@@ -17,6 +17,8 @@ const [selectedVariant, setSelectedVariant] =
   useState(firstVariant || null);
 
   const [quantity, setQuantity] = useState(1);
+  const [cartOpen, setCartOpen] = useState(false);
+const [cartData, setCartData] = useState(null);
 
  async function handleAddToCart() {
   console.log("ADD TO CART CLICKED");
