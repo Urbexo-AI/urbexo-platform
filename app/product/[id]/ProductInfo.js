@@ -16,6 +16,8 @@ export default function ProductInfo({ product }) {
 const [selectedVariant, setSelectedVariant] =
   useState(firstVariant || null);
 
+  const [quantity, setQuantity] = useState(1);
+
  async function handleAddToCart() {
   console.log("ADD TO CART CLICKED");
 
@@ -31,6 +33,7 @@ const [selectedVariant, setSelectedVariant] =
     },
     body: JSON.stringify({
       variantId: selectedVariant.id,
+      quantity: quantity,
     }),
   });
 
@@ -69,7 +72,38 @@ const [selectedVariant, setSelectedVariant] =
         variants={variants}
         onSelect={(v) => setSelectedVariant(v)}
       />
+<div style={{ marginTop: "10px", display: "flex", alignItems: "center", gap: "10px" }}>
+  
+  <button
+    onClick={() => setQuantity(q => Math.max(1, q - 1))}
+    style={{
+      padding: "6px 12px",
+      border: "1px solid #ddd",
+      background: "white",
+      cursor: "pointer"
+    }}
+  >
+    -
+  </button>
 
+  <span style={{ minWidth: "30px", textAlign: "center" }}>
+    {quantity}
+  </span>
+
+  <button
+    onClick={() => setQuantity(q => q + 1)}
+    style={{
+      padding: "6px 12px",
+      border: "1px solid #ddd",
+      background: "white",
+      cursor: "pointer"
+    }}
+  >
+    +
+  </button>
+
+</div>
+          
       <button
   onClick={handleAddToCart}
 
