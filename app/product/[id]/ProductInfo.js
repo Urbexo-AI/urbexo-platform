@@ -66,7 +66,6 @@ const [selectedVariant, setSelectedVariant] =
       />
 
       <button
-        <button
   onClick={() => {
     console.log("CLICK WORKS");
     alert("CLICK WORKS");
