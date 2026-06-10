@@ -4,7 +4,6 @@ import VariantSelector from "./VariantSelector";
 import ProductInfo from "./ProductInfo";
 
 async function getProduct(id) {
-  const cleanId = id.replace("gid://shopify/Product/", "");
 
   const query = `
     query getProduct($id: ID!) {
@@ -42,8 +41,8 @@ async function getProduct(id) {
   `;
 
   const res = await shopifyFetch(query, {
-    id: `gid://shopify/Product/${cleanId}`,
-  });
+  id: params.id,
+});
 
   return res.data?.product;
 }
