@@ -26,6 +26,8 @@ const [selectedVariant, setSelectedVariant] =
     return;
   }
 
+  const savedCartId = localStorage.getItem("cartId");
+
   const res = await fetch("/api/cart", {
     method: "POST",
     headers: {
@@ -33,7 +35,8 @@ const [selectedVariant, setSelectedVariant] =
     },
     body: JSON.stringify({
       variantId: selectedVariant.id,
-      quantity: quantity,
+      quantity,
+      cartId: savedCartId,
     }),
   });
 
@@ -41,11 +44,12 @@ const [selectedVariant, setSelectedVariant] =
 
   console.log("API RESPONSE:", data);
 
-  if (data?.checkoutUrl) {
-    window.location.href = data.checkoutUrl;
-  } else {
-    console.error("Missing checkoutUrl", data);
+  if (data?.cartId) {
+    localStorage.setItem("cartId", data.cartId);
   }
+
+  setCartData(data);
+  setCartOpen(true);
 }
   return (
     <div>
