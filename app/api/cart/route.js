@@ -2,8 +2,12 @@ import { shopifyFetch } from "../../../lib/shopify";
 
 export async function POST(req) {
   try {
-    const { variantId, quantity } = await req.json();
-
+   const {
+  variantId,
+  quantity,
+  cartId,
+} = await req.json();
+    
     if (!variantId) {
       return Response.json(
         { error: "Missing variantId" },
