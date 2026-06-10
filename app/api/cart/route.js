@@ -28,7 +28,7 @@ export async function POST(req) {
       lines: [
         {
           merchandiseId: variantId,
-          quantity,
+          quantity: quantity || 1,
         },
       ],
     });
