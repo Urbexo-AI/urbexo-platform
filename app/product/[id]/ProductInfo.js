@@ -5,11 +5,16 @@ import VariantSelector from "./VariantSelector";
 
 export default function ProductInfo({ product }) {
   const variants = product.variants?.edges || [];
+  
+  const realVariants = variants
+  .map((v) => v.node)
+  .filter((v) => v.title !== "Default Title");
 
- const firstVariant = realVariants[0] || variants?.[0]?.node;
+ const firstVariant =
+  realVariants[0] || variants?.[0]?.node || null;
 
 const [selectedVariant, setSelectedVariant] =
-  useState(firstVariant);
+  useState(firstVariant || null);
 
  async function handleAddToCart() {
   console.log("ADD TO CART CLICKED");
@@ -66,10 +71,8 @@ const [selectedVariant, setSelectedVariant] =
       />
 
       <button
-  onClick={() => {
-    console.log("CLICK WORKS");
-    alert("CLICK WORKS");
-  }}
+  onClick={handleAddToCart}
+
         style={{
           marginTop: "15px",
           padding: "12px 20px",
