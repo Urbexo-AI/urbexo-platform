@@ -1,4 +1,4 @@
-import { shopifyFetch } from '@/lib/shopify';
+import { shopifyFetch } from "../../../lib/shopify";
 
 export async function POST(req) {
   try {
@@ -17,6 +17,9 @@ export async function POST(req) {
           cart {
             checkoutUrl
           }
+          userErrors {
+            message
+          }
         }
       }
     `;
@@ -30,14 +33,13 @@ export async function POST(req) {
       ],
     });
 
-    const checkoutUrl =
-      res?.data?.cartCreate?.cart?.checkoutUrl;
+    const checkoutUrl = res?.data?.cartCreate?.cart?.checkoutUrl;
 
     if (!checkoutUrl) {
-      console.error("Shopify Response:", res);
+      console.error("Shopify Response:", JSON.stringify(res, null, 2));
 
       return Response.json(
-        { error: "No checkoutUrl returned from Shopify" },
+        { error: "No checkoutUrl returned" },
         { status: 500 }
       );
     }
