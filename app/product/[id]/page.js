@@ -36,9 +36,6 @@ async function getProduct(id) {
       price {
         amount
       }
-      image {
-        url
-      }
     }
   }
 }
