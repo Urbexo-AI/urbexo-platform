@@ -15,10 +15,40 @@ export async function POST(req) {
       );
     }
 
-    if (cartId) {
-  return Response.json({
-    message: "Existing cart detected",
+let res;
+
+if (cartId) {
+  const cartLinesAddMutation = `
+    mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
+      cartLinesAdd(cartId: $cartId, lines: $lines) {
+        cart {
+          id
+          checkoutUrl
+        }
+        userErrors {
+          message
+        }
+      }
+    }
+  `;
+
+  res = await shopifyFetch(cartLinesAddMutation, {
     cartId,
+    lines: [
+      {
+        merchandiseId: variantId,
+        quantity: quantity || 1,
+      },
+    ],
+  });
+} else {
+  res = await shopifyFetch(mutation, {
+    lines: [
+      {
+        merchandiseId: variantId,
+        quantity: quantity || 1,
+      },
+    ],
   });
 }
     
@@ -45,10 +75,13 @@ export async function POST(req) {
       ],
     });
 
-    const checkoutUrl = res?.data?.cartCreate?.cart?.checkoutUrl;
-    
-    const cartId =
-  res?.data?.cartCreate?.cart?.id;
+    const checkoutUrl =
+  res?.data?.cartCreate?.cart?.checkoutUrl ||
+  res?.data?.cartLinesAdd?.cart?.checkoutUrl;
+
+const cartId =
+  res?.data?.cartCreate?.cart?.id ||
+  res?.data?.cartLinesAdd?.cart?.id;
 
     if (!checkoutUrl) {
       console.error("Shopify Response:", JSON.stringify(res, null, 2));
