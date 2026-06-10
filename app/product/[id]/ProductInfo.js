@@ -36,6 +36,7 @@ const [selectedVariant, setSelectedVariant] =
     body: JSON.stringify({
       variantId: selectedVariant.id,
       quantity: quantity,
+      cartId: savedCartId,
     }),
   });
 
@@ -44,10 +45,7 @@ const [selectedVariant, setSelectedVariant] =
   console.log("API RESPONSE:", data);
 
    if (data?.cartId) {
-  localStorage.setItem(
-    "shopifyCartId",
-    data.cartId
-  );
+  localStorage.setItem("cartId", data.cartId);
 }
 
   if (data?.checkoutUrl) {
