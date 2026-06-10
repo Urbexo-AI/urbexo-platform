@@ -41,6 +41,13 @@ const [selectedVariant, setSelectedVariant] =
 
   console.log("API RESPONSE:", data);
 
+   if (data?.cartId) {
+  localStorage.setItem(
+    "shopifyCartId",
+    data.cartId
+  );
+}
+
   if (data?.checkoutUrl) {
     window.location.href = data.checkoutUrl;
   } else {
