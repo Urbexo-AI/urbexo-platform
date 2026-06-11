@@ -161,6 +161,25 @@ export default function ProductInfo({ product }) {
       Qty: {node.quantity}
     </div>
 
+      <button
+  onClick={async () => {
+    const cartId = localStorage.getItem("cartId");
+
+    await fetch("/api/cart/remove", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        cartId,
+        lineId: node.id,
+      }),
+    });
+  }}
+>
+  Remove
+</button>
+      
     <div
       style={{
         marginTop: "5px",
@@ -175,6 +194,31 @@ export default function ProductInfo({ product }) {
   </div>
 ))}
 
+  <div style={{ fontWeight: "bold", marginBottom: "10px" }}>
+  Total: $
+  {cartData?.lines?.edges?.reduce((sum, { node }) => {
+    return (
+      sum +
+      Number(node.merchandise.price.amount) * node.quantity
+    );
+  }, 0).toFixed(2)}
+</div>
+
+  <button
+  onClick={() => {
+    window.location.href = cartData.checkoutUrl;
+  }}
+  style={{
+    marginTop: "10px",
+    padding: "10px",
+    background: "green",
+    color: "white",
+    border: "none",
+    width: "100%",
+  }}
+>
+  Checkout
+</button>
           <button
             onClick={() => setCartOpen(false)}
             style={{
