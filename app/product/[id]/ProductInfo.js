@@ -136,22 +136,44 @@ export default function ProductInfo({ product }) {
           )}
 
           {cartData?.lines?.edges?.map(({ node }, i) => (
-            <div
-              key={i}
-              style={{
-                padding: "10px 0",
-                borderBottom: "1px solid #eee",
-              }}
-            >
-              <div style={{ fontWeight: "bold" }}>
-                {node.merchandise.product.title}
-              </div>
+  <div
+    key={i}
+    style={{
+      marginBottom: "20px",
+      borderBottom: "1px solid #eee",
+      paddingBottom: "10px",
+    }}
+  >
+    <div
+      style={{
+        fontWeight: "bold",
+      }}
+    >
+      {node.merchandise.product.title}
+    </div>
 
-              <div style={{ fontSize: "12px", color: "#666" }}>
-                Qty: {node.quantity}
-              </div>
-            </div>
-          ))}
+    <div
+      style={{
+        color: "#666",
+        marginTop: "5px",
+      }}
+    >
+      Qty: {node.quantity}
+    </div>
+
+    <div
+      style={{
+        marginTop: "5px",
+        color: "#000",
+      }}
+    >
+      $
+      {Number(
+        node.merchandise.price.amount
+      ).toFixed(2)}
+    </div>
+  </div>
+))}
 
           <button
             onClick={() => setCartOpen(false)}
