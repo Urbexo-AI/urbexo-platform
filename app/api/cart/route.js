@@ -23,16 +23,20 @@ export async function POST(req) {
                 node {
                   quantity
 
-                  merchandise {
-                    ... on ProductVariant {
-                      id
-                      title
+                 merchandise {
+  ... on ProductVariant {
+    id
+    title
 
-                      product {
-                        title
-                      }
-                    }
-                  }
+    price {
+      amount
+    }
+
+    product {
+      title
+    }
+  }
+}
                 }
               }
             }
@@ -63,16 +67,20 @@ export async function POST(req) {
                 node {
                   quantity
 
-                  merchandise {
-                    ... on ProductVariant {
-                      id
-                      title
+                 merchandise {
+  ... on ProductVariant {
+    id
+    title
 
-                      product {
-                        title
-                      }
-                    }
-                  }
+    price {
+      amount
+    }
+
+    product {
+      title
+    }
+  }
+}
                 }
               }
             }
