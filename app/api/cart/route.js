@@ -1,95 +1,155 @@
 import { shopifyFetch } from "../../../lib/shopify";
-import ImageGallery from "./ImageGallery";
-import VariantSelector from "./VariantSelector";
-import ProductInfo from "./ProductInfo";
 
-async function getProduct(id) {
+export async function POST(req) {
   try {
-    const query = `
-      query getProduct($id: ID!) {
-        product(id: $id) {
-          id
-          title
-          vendor
-          descriptionHtml
+    const { variantId, quantity, cartId } = await req.json();
 
-          priceRange {
-            minVariantPrice {
-              amount
-            }
-          }
+    if (!variantId) {
+      return Response.json(
+        { error: "Missing variantId" },
+        { status: 400 }
+      );
+    }
 
-          images(first: 20) {
-            edges {
-              node {
-                url
-              }
-            }
-          }
+    const cartCreateMutation = `
+      mutation cartCreate($lines: [CartLineInput!]!) {
+        cartCreate(input: { lines: $lines }) {
+          cart {
+            id
+            checkoutUrl
 
-          variants(first: 20) {
-            edges {
-              node {
-                id
-                title
-                price {
-                  amount
+            lines(first: 50) {
+              edges {
+                node {
+                  quantity
+
+                  merchandise {
+                    ... on ProductVariant {
+                      id
+                      title
+
+                      product {
+                        title
+                      }
+                    }
+                  }
                 }
-                  product {
-    title
               }
             }
+          }
+
+          userErrors {
+            message
           }
         }
       }
     `;
 
-    const res = await shopifyFetch(query, {
-  id: `gid://shopify/Product/${id}`,
-});
+    const cartLinesAddMutation = `
+      mutation cartLinesAdd(
+        $cartId: ID!,
+        $lines: [CartLineInput!]!
+      ) {
+        cartLinesAdd(
+          cartId: $cartId,
+          lines: $lines
+        ) {
+          cart {
+            id
+            checkoutUrl
 
-    console.log("SHOPIFY RESPONSE:", res);
+            lines(first: 50) {
+              edges {
+                node {
+                  quantity
 
-    return res?.data?.product || null;
+                  merchandise {
+                    ... on ProductVariant {
+                      id
+                      title
+
+                      product {
+                        title
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          userErrors {
+            message
+          }
+        }
+      }
+    `;
+
+    let res;
+
+    if (cartId) {
+      res = await shopifyFetch(
+        cartLinesAddMutation,
+        {
+          cartId,
+          lines: [
+            {
+              merchandiseId: variantId,
+              quantity: quantity || 1,
+            },
+          ],
+        }
+      );
+    } else {
+      res = await shopifyFetch(
+        cartCreateMutation,
+        {
+          lines: [
+            {
+              merchandiseId: variantId,
+              quantity: quantity || 1,
+            },
+          ],
+        }
+      );
+    }
+
+    const cart =
+      res?.data?.cartCreate?.cart ||
+      res?.data?.cartLinesAdd?.cart;
+
+    if (!cart) {
+      console.error(
+        "Shopify Response:",
+        JSON.stringify(res, null, 2)
+      );
+
+      return Response.json(
+        { error: "Cart not returned" },
+        { status: 500 }
+      );
+    }
+
+    return Response.json({
+      cartId: cart.id,
+      checkoutUrl: cart.checkoutUrl,
+      cart,
+    });
 
   } catch (err) {
-    console.error("GET PRODUCT ERROR:", err);
-    return null;
+    console.error(
+      "Cart API Error:",
+      err
+    );
+
+    return Response.json(
+      {
+        error: "Server error",
+        detail: String(err),
+      },
+      {
+        status: 500,
+      }
+    );
   }
-}
-
-export default async function ProductPage({ params }) {
-  const product = await getProduct(params.id);
-
-  if (!product) {
-    return <div>Product not found</div>;
-  }
-
-  const variants = product.variants?.edges || [];
-  const realVariants = variants
-    .map((v) => v.node)
-    .filter((v) => v.title !== "Default Title");
-
-  const hasVariants = realVariants.length > 1;
-
-  return (
-    <main style={{ padding: "40px", fontFamily: "Arial" }}>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "40px",
-        }}
-      >
-        {/* Left - Images */}
-        <div>
-          <ImageGallery images={product.images} />
-        </div>
-
-        {/* Right - Info */}
-        <ProductInfo product={product} />
-
-  </div>
-</main>
-  );
 }
