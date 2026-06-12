@@ -19,7 +19,7 @@ export default function ProductInfo({ product }) {
   const [quantity, setQuantity] = useState(1);
 
   const [cartOpen, setCartOpen] = useState(false);
-  const [cartData, setCartData] = useState(null);
+  const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(false);
 
   async function handleAddToCart() {
@@ -53,7 +53,7 @@ export default function ProductInfo({ product }) {
         localStorage.setItem("cartId", data.cartId);
       }
 
-      setCartData(data.cart);
+      setCart(data.cart);
       setCartOpen(true);
     } catch (err) {
       setLoading(false);
@@ -131,11 +131,11 @@ export default function ProductInfo({ product }) {
         >
           <h2>Cart</h2>
 
-          {!cartData?.lines?.edges?.length && (
+          {!cart?.lines?.edges?.length && (
             <p>No items in cart</p>
           )}
 
-          {cartData?.lines?.edges?.map(({ node }, i) => (
+          {cart?.lines?.edges?.map(({ node }, i) => (
   <div
     key={i}
     style={{
@@ -176,7 +176,7 @@ export default function ProductInfo({ product }) {
       });
 
       const data = await res.json();
-      setCartData(data.cart);
+      setCart(data.cart);
     }}
   >
     -
@@ -240,7 +240,7 @@ export default function ProductInfo({ product }) {
     >
       $
       {Number(
-        node.merchandise.price.amount
+        node.merchandise?.price?.amount
       ).toFixed(2)}
     </div>
   </div>
@@ -248,17 +248,14 @@ export default function ProductInfo({ product }) {
 
   <div style={{ fontWeight: "bold", marginBottom: "10px" }}>
   Total: $
-  {cartData?.lines?.edges?.reduce((sum, { node }) => {
-    return (
-      sum +
-      Number(node.merchandise.price.amount) * node.quantity
-    );
-  }, 0).toFixed(2)}
+  {cart?.lines?.edges?.reduce((sum, { node }) => {
+  return sum + Number(node.merchandise?.price?.amount || 0) * node.quantity;
+}, 0).toFixed(2)}
 </div>
 
   <button
   onClick={() => {
-    window.location.href = cartData.checkoutUrl;
+    window.location.href = cart?.checkoutUrl;
   }}
   style={{
     marginTop: "10px",
