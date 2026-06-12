@@ -17,6 +17,7 @@ export async function POST(req) {
                   quantity
                   merchandise {
                     ... on ProductVariant {
+                      id
                       title
                       price {
                         amount
@@ -44,13 +45,11 @@ export async function POST(req) {
       ],
     });
 
-    const cart = res?.data?.cartLinesUpdate?.cart;
+    return Response.json({
+      cart: res?.data?.cartLinesUpdate?.cart,
+    });
 
-    return Response.json({ cart });
   } catch (err) {
-    return Response.json(
-      { error: String(err) },
-      { status: 500 }
-    );
+    return Response.json({ error: String(err) }, { status: 500 });
   }
 }
