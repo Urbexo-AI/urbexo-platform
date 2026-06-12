@@ -39,13 +39,11 @@ export async function POST(req) {
       lineIds: [lineId],
     });
 
-    const cart = res?.data?.cartLinesRemove?.cart;
+    return Response.json({
+      cart: res?.data?.cartLinesRemove?.cart,
+    });
 
-    return Response.json({ cart });
   } catch (err) {
-    return Response.json(
-      { error: String(err) },
-      { status: 500 }
-    );
+    return Response.json({ error: String(err) }, { status: 500 });
   }
 }
