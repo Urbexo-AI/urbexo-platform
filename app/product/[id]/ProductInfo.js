@@ -255,7 +255,9 @@ export default function ProductInfo({ product }) {
 
   <button
   onClick={() => {
-    window.location.href = cart?.checkoutUrl;
+    if (cart?.checkoutUrl) {
+  window.location.href = cart.checkoutUrl;
+}
   }}
   style={{
     marginTop: "10px",
