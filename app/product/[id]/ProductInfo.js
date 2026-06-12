@@ -201,7 +201,7 @@ export default function ProductInfo({ product }) {
       });
 
       const data = await res.json();
-      setCartData(data.cart);
+      setCart(data.cart);
     }}
   >
     +
@@ -226,7 +226,7 @@ export default function ProductInfo({ product }) {
 
     const data = await res.json();
 
-    setCartData(data.cart);
+    setCart(data.cart);
   }}
 >
   Remove
