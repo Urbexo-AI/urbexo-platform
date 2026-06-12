@@ -158,14 +158,62 @@ export default function ProductInfo({ product }) {
         marginTop: "5px",
       }}
     >
-      Qty: {node.quantity}
+      <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+  <button
+    onClick={async () => {
+      const cartId = localStorage.getItem("cartId");
+
+      const res = await fetch("/api/cart/update", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cartId,
+          lineId: node.id,
+          quantity: node.quantity - 1,
+        }),
+      });
+
+      const data = await res.json();
+      setCartData(data.cart);
+    }}
+  >
+    -
+  </button>
+
+  <span>Qty: {node.quantity}</span>
+
+  <button
+    onClick={async () => {
+      const cartId = localStorage.getItem("cartId");
+
+      const res = await fetch("/api/cart/update", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cartId,
+          lineId: node.id,
+          quantity: node.quantity + 1,
+        }),
+      });
+
+      const data = await res.json();
+      setCartData(data.cart);
+    }}
+  >
+    +
+  </button>
+</div>
     </div>
 
-      <button
+     <button
   onClick={async () => {
     const cartId = localStorage.getItem("cartId");
 
-    await fetch("/api/cart/remove", {
+    const res = await fetch("/api/cart/remove", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -175,6 +223,10 @@ export default function ProductInfo({ product }) {
         lineId: node.id,
       }),
     });
+
+    const data = await res.json();
+
+    setCartData(data.cart);
   }}
 >
   Remove
