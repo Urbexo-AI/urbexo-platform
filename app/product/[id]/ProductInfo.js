@@ -22,7 +22,26 @@ export default function ProductInfo({ product }) {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  async function refreshCart(cartId) {
+  const res = await fetch("/api/cart/get", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      cartId,
+    }),
+  });
+
+  const data = await res.json();
+
+  if (data?.cart) {
+    setCart(data.cart);
+  }
+}
+
   async function handleAddToCart() {
+    
     setLoading(true);
 
     try {
@@ -160,52 +179,50 @@ export default function ProductInfo({ product }) {
     >
       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
   <button
-    onClick={async () => {
-      const cartId = localStorage.getItem("cartId");
+  onClick={async () => {
+    const cartId = localStorage.getItem("cartId");
 
-      const res = await fetch("/api/cart/update", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          cartId,
-          lineId: node.id,
-          quantity: node.quantity - 1,
-        }),
-      });
+    await fetch("/api/cart/update", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        cartId,
+        lineId: node.id,
+        quantity: node.quantity - 1,
+      }),
+    });
 
-      const data = await res.json();
-      setCart(data.cart);
-    }}
-  >
-    -
-  </button>
+    await refreshCart(cartId);
+  }}
+>
+  -
+</button>
 
   <span>Qty: {node.quantity}</span>
 
-  <button
-    onClick={async () => {
-      const cartId = localStorage.getItem("cartId");
+ <button
+  onClick={async () => {
+    const cartId = localStorage.getItem("cartId");
 
-      const res = await fetch("/api/cart/update", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          cartId,
-          lineId: node.id,
-          quantity: node.quantity + 1,
-        }),
-      });
+    await fetch("/api/cart/update", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        cartId,
+        lineId: node.id,
+        quantity: node.quantity + 1,
+      }),
+    });
 
-      const data = await res.json();
-      setCart(data.cart);
-    }}
-  >
-    +
-  </button>
+    await refreshCart(cartId);
+  }}
+>
+  +
+</button>
 </div>
     </div>
 
